@@ -11,7 +11,7 @@ A simple function that allows conditional evaluations similar to the `switch-cas
 [index.js](./src/index.js)
 
 ```
-npx github:JamesRobertHugginsNgo/get-boilerplate#4.0.0 https://github.com/JamesRobertHugginsNgo/eva-switch/blob/1.0.0/src/index.js > eva-switch.js
+npx github:JamesRobertHugginsNgo/get-boilerplate#5.0.0 https://github.com/JamesRobertHugginsNgo/eva-switch/blob/1.0.0/src/index.js eva-switch.js
 ```
 
 ## Sample
