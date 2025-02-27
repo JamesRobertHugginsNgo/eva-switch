@@ -4,13 +4,150 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>sample.html</title>
+	<title>Sample eva-switch</title>
+	<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-	<h1>sample.html</h1>
+	<main class="page-width">
+		<h1>Sample eva-switch</h1>
 
-	<script type="module" src="./script.js"></script>
+		<p>The following content is dynamically generated which can be viewed in the web page's source code.</p>
+	</main>
+
+	<script type="module">
+		import evaSwitch from '../dist/eva-switch.js';
+		import CodeDisplay from './code-display.js';
+
+		const codeDisplay = new CodeDisplay(document.querySelector('main'));
+
+		codeDisplay.insert(
+			'Default',
+			'Execute default.',
+			() => {
+				let result;
+				evaSwitch('hello world')
+					.default((value) => {
+						result = { value };
+					});
+				return result;
+			}
+		);
+
+		codeDisplay.insert(
+			'RegExp',
+			'Execute case with regular expression.',
+			() => {
+				let result;
+				evaSwitch('hello world')
+					.case(/hollo/, 'case0')
+					.do((value, match, caseId) => {
+						result = {
+							value,
+							match,
+							caseId
+						};
+					})
+					.case(/hell(o)/, 'case1')
+					.case(/hello/, 'case2')
+					.do((value, match, caseId) => {
+						result = {
+							value,
+							match,
+							caseId
+						};
+					})
+					.default((value) => {
+						result = {
+							value
+						};
+					});
+				return result;
+			}
+		);
+
+		codeDisplay.insert(
+			'RegExp Hollo',
+			'Execute case with regular expression.',
+			() => {
+				let result;
+				evaSwitch('hollo world')
+					.case(/hollo/, 'case0')
+					.do((value, match, caseId) => {
+						result = {
+							value,
+							match,
+							caseId
+						};
+					})
+					.case(/hell(o)/, 'case1')
+					.case(/hello/, 'case2')
+					.do((value, match, caseId) => {
+						result = {
+							value,
+							match,
+							caseId
+						};
+					})
+					.default((value) => {
+						result = {
+							value
+						};
+					});
+				return result;
+			}
+		);
+
+		codeDisplay.insert(
+			'Function',
+			'Execute case with eval function.',
+			() => {
+				let result;
+				evaSwitch('hello world')
+					.case((value) => {
+						return value + ' abc';
+					}, 'case3')
+					.do((value, returnValue, caseId) => {
+						result = {
+							value,
+							returnValue,
+							caseId
+						};
+					})
+					.default((value) => {
+						result = {
+							value
+						};
+					});
+				return result;
+			}
+		);
+
+		codeDisplay.insert(
+			'Falsy Function',
+			'Execute case with eval function returning falsy value.',
+			() => {
+				let result;
+				evaSwitch('hello world')
+					.case((value) => {
+						return false;
+					}, 'case3')
+					.do((value, returnValue, caseId) => {
+						result = {
+							value,
+							returnValue,
+							caseId
+						};
+					})
+					.default((value) => {
+						result = {
+							value
+						};
+					});
+				return result;
+			}
+		);
+	</script>
 </body>
 
 </html>

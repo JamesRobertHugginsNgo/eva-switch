@@ -1,16 +1,15 @@
-/* BOILERPLATE */
-
 export default function evaSwitch(value) {
 	function executableDefault(callback) {
 		callback(value);
 	}
-
 	function executableCase(evaluate, caseId) {
 		if (evaluate instanceof RegExp) {
 			evaluate = ((regex) => {
 				return (value) => {
-					return regex.exec(value);
-				}
+					if (typeof value === "string") {
+						return regex.exec(value);
+					}
+				};
 			})(evaluate);
 		}
 		const result = evaluate(value);
@@ -18,60 +17,55 @@ export default function evaSwitch(value) {
 			return {
 				default: executableDefault,
 				case: makePassThroughCase(result, caseId),
-				do: makeExecutableDo(result, caseId)
+				do: makeExecutableDo(result, caseId),
 			};
 		}
-
 		return {
 			default: executableDefault,
 			case: executableCase,
-			do: passThroughDo
+			do: passThroughDo,
 		};
 	}
-
 	function makeExecutableDo(result, caseId) {
 		return function executbleDo(callback) {
 			callback(value, result, caseId);
 			return {
 				default: ignoredDefault,
-				case: ignoredCase
-			}
+				case: ignoredCase,
+			};
 		};
 	}
-
 	function makePassThroughCase(result, caseId) {
-		return function passThroughCase() {
+		return function passThroughCase(ignoredEvaluate, ignoredCaseId) {
 			return {
 				default: executableDefault,
 				case: makePassThroughCase(result, caseId),
-				do: makeExecutableDo(result, caseId)
-			}
+				do: makeExecutableDo(result, caseId),
+			};
 		};
 	}
-
-	function passThroughDo() {
+	function passThroughDo(ignoredCallback) {
 		return {
 			default: executableDefault,
-			case: executableCase
+			case: executableCase,
 		};
 	}
-
-	function ignoredDefault() { }
-
-	function ignoredCase() {
+	function ignoredDefault(ignoredCallback) {}
+	function ignoredCase(ignoredEvaluate, ignoredCaseId) {
 		return {
 			default: ignoredDefault,
 			case: ignoredCase,
-			do: ignoredDo
+			do: ignoredDo,
 		};
 	}
-
-	function ignoredDo() {
+	function ignoredDo(ignoredCallback) {
 		return {
 			default: ignoredDefault,
-			case: ignoredDo
+			case: ignoredCase,
 		};
 	}
-
-	return passThroughDo();
+	return {
+		default: executableDefault,
+		case: executableCase,
+	};
 }
