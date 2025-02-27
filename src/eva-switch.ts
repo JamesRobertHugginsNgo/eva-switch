@@ -21,7 +21,7 @@ export default function evaSwitch(value: any): EVA_SWITCH_DO_RETURN {
 					if (typeof value === 'string') {
 						return regex.exec(value);
 					}
-				}
+				};
 			})(evaluate);
 		}
 		const result: any = evaluate(value);
@@ -46,7 +46,7 @@ export default function evaSwitch(value: any): EVA_SWITCH_DO_RETURN {
 			return {
 				default: ignoredDefault,
 				case: ignoredCase
-			}
+			};
 		};
 	}
 
@@ -56,7 +56,7 @@ export default function evaSwitch(value: any): EVA_SWITCH_DO_RETURN {
 				default: executableDefault,
 				case: makePassThroughCase(result, caseId),
 				do: makeExecutableDo(result, caseId)
-			}
+			};
 		};
 	}
 
