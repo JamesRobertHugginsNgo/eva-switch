@@ -1,20 +1,21 @@
 # eva-switch
 
-[![Static Badge](https://img.shields.io/badge/GitHub%20Repo-6e5494)](https://github.com/JamesRobertHugginsNgo/eva-switch)
-[![Static Badge](https://img.shields.io/badge/GitHub%20Page-4078c0)](https://jamesroberthugginsngo.github.io/eva-switch/)
-[![Static Badge](https://img.shields.io/badge/Tag-1.0.0-6cc644)](https://github.com/JamesRobertHugginsNgo/eva-switch/tree/1.0.0)
+[![Open in Github](https://img.shields.io/badge/Open_in_GitHub-6e5494)](https://github.com/JamesRobertHugginsNgo/eva-switch)
+[![Open in Github Page](https://img.shields.io/badge/Open_in_GitHub%20Page-4078c0)](https://jamesroberthugginsngo.github.io/eva-switch/)
+[![Open Tag](https://img.shields.io/badge/Open_Tag-3.0.0-6cc644)](https://github.com/JamesRobertHugginsNgo/eva-switch/tree/1.0.0)
 
 A simple function that allows conditional evaluations similar to the `switch-case` structures.
 
-## Boilerplate
+## Reusable Codes
 
-[index.js](./src/index.js)
+Use the raw link to quickly download the raw source code.
 
-```
-npx github:JamesRobertHugginsNgo/get-boilerplate#5.0.0 https://github.com/JamesRobertHugginsNgo/eva-switch/blob/1.0.0/src/index.js eva-switch.js
-```
+- [eva-switch.ts](./src/eva-switch.ts) \| [raw](./src/eva-switch.ts?raw=1)
+- [eva-switch.js](./dist/eva-switch.js) \| [raw](./dist/eva-switch.js?raw=1)
 
-## Sample
+## Samples
+
+The following sample web pages are best viewed from the github page version.
 
 - [sample.html](./sample/sample.html)
 
