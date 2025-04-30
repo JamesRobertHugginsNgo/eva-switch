@@ -1,91 +1,146 @@
-type EVA_SWITCH_DEFAULT_CALLBACK = (value: any) => void;
-type EVA_SWITCH_DEFAULT = (callback: EVA_SWITCH_DEFAULT_CALLBACK) => void;
+type GenericDefault<T> = (callback: (value: any) => void) => T;
+type GenericDo<T> = (callback: (value: any, result: any, caseId?: string) => void) => T;
+type GenericCase<T> = (evaluate: (value: any) => any | RegExp, caseId?: string) => T;
 
-type EVA_SWITCH_CASE_EVALUATE = (value: any) => any;
-type EVA_SWITCH_CASE_RETURN = { default: EVA_SWITCH_DEFAULT, case: EVA_SWITCH_CASE, do: EVA_SWITCH_DO };
-type EVA_SWITCH_CASE = (evaluate: RegExp | EVA_SWITCH_CASE_EVALUATE, caseId: any) => EVA_SWITCH_CASE_RETURN;
+// ==
+// IGNORE
+// ==
 
-type EVA_SWITCH_DO_CALLBACK = (value: any, result: any, caseId: any) => void;
-type EVA_SWITCH_DO_RETURN = { default: EVA_SWITCH_DEFAULT, case: EVA_SWITCH_CASE };
-type EVA_SWITCH_DO = (callback: EVA_SWITCH_DO_CALLBACK) => EVA_SWITCH_DO_RETURN;
+type IgnoreResult = {
+	default: IgnoreDefault,
+	do: IgnoreDo,
+	case: IgnoreCase
+};
+const ignoreResult: IgnoreResult = {
+	default: makeIgnoreDefault(),
+	do: makeIgnoreDo(),
+	case: makeIgnoreCase()
+};
 
-export default function evaSwitch(value: any): EVA_SWITCH_DO_RETURN {
-	function executableDefault(callback: EVA_SWITCH_DEFAULT_CALLBACK): void {
+type IgnoreDefault = GenericDefault<IgnoreResult>;
+function makeIgnoreDefault(): IgnoreDefault {
+	return function ignoreDefault(callback: (value: any) => void): IgnoreResult {
+		return ignoreResult;
+	};
+}
+
+type IgnoreDo = GenericDo<IgnoreResult>;
+function makeIgnoreDo(): IgnoreDo {
+	return function ignoreDo(callback: (value: any, result: any, caseId?: string) => void): IgnoreResult {
+		return ignoreResult;
+	};
+}
+
+type IgnoreCase = GenericCase<IgnoreResult>;
+function makeIgnoreCase(): IgnoreCase {
+	return function ignoreCase(evaluate: (value: any) => any | RegExp, caseId?: string): IgnoreResult {
+		return ignoreResult;
+	};
+}
+
+// ==
+// PASS
+// ==
+
+type PassDoResult = {
+	default: ExecDefault,
+	do: PassDo,
+	case: ExecCase
+};
+type PassDo = GenericDo<PassDoResult>;
+function makePassDo(value: any): PassDo {
+	return function passDo(callback: (_value: any, result: any, caseId?: string) => void): PassDoResult {
+		return {
+			default: makeExecDefault(value),
+			do: passDo,
+			case: makeExecCase(value)
+		};
+	};
+}
+
+type PassCaseResult = {
+	default: ExecDefault,
+	do: ExecDo,
+	case: PassCase
+};
+type PassCase = GenericCase<PassCaseResult>;
+function makePassCase(value: any, result: any, caseId?: string): PassCase {
+	return function passCase(evaluate: (value: any) => any | RegExp, _caseId?: string): PassCaseResult {
+		return {
+			default: makeExecDefault(value),
+			do: makeExecDo(value, result, caseId),
+			case: passCase
+		};
+	};
+}
+
+// ==
+// EXEC
+// ==
+
+type ExecDefault = GenericDefault<IgnoreResult>;
+function makeExecDefault(value: any): ExecDefault {
+	return function execDefault(callback: (value: any) => void): IgnoreResult {
 		callback(value);
-	}
+		return ignoreResult;
+	};
+}
 
-	function executableCase(evaluate: RegExp | EVA_SWITCH_CASE_EVALUATE, caseId: any): EVA_SWITCH_CASE_RETURN {
+type ExecDo = GenericDo<IgnoreResult>;
+function makeExecDo(value: any, result: any, caseId?: string): ExecDo {
+	return function execDo(callback: (value: any, result: any, caseId?: string) => void): IgnoreResult {
+		callback(value, result, caseId);
+		return ignoreResult;
+	};
+}
+
+type ExecCaseResult = {
+	default: ExecDefault,
+	do: ExecDo,
+	case: PassCase
+} | {
+	default: ExecDefault,
+	do: PassDo,
+	case: ExecCase
+};
+type ExecCase = GenericCase<ExecCaseResult>;
+function makeExecCase(value: any): ExecCase {
+	return function execCase(evaluate: (value: any) => any | RegExp, caseId?: string): ExecCaseResult {
+		let result: any = null;
 		if (evaluate instanceof RegExp) {
-			evaluate = ((regex: RegExp): EVA_SWITCH_CASE_EVALUATE => {
-				return (value: any): any => {
-					if (typeof value === 'string') {
-						return regex.exec(value);
-					}
-				};
-			})(evaluate);
-		}
-		const result: any = evaluate(value);
-		if (result) {
-			return {
-				default: executableDefault,
-				case: makePassThroughCase(result, caseId),
-				do: makeExecutableDo(result, caseId)
-			};
+			result = evaluate.exec(String(value));
+		} else {
+			result = evaluate(value);
 		}
 
-		return {
-			default: executableDefault,
-			case: executableCase,
-			do: passThroughDo
-		};
-	}
-
-	function makeExecutableDo(result: any, caseId: any): EVA_SWITCH_DO {
-		return function executbleDo(callback: EVA_SWITCH_DO_CALLBACK): EVA_SWITCH_DO_RETURN {
-			callback(value, result, caseId);
+		if (result == null || result === false) {
 			return {
-				default: ignoredDefault,
-				case: ignoredCase
+				default: makeExecDefault(value),
+				do: makePassDo(value),
+				case: execCase
 			};
-		};
-	}
-
-	function makePassThroughCase(result: any, caseId: any): EVA_SWITCH_CASE {
-		return function passThroughCase(ignoredEvaluate: RegExp | EVA_SWITCH_CASE_EVALUATE, ignoredCaseId: any): EVA_SWITCH_CASE_RETURN {
-			return {
-				default: executableDefault,
-				case: makePassThroughCase(result, caseId),
-				do: makeExecutableDo(result, caseId)
-			};
-		};
-	}
-
-	function passThroughDo(ignoredCallback: EVA_SWITCH_DO_CALLBACK): EVA_SWITCH_DO_RETURN {
+		}
 		return {
-			default: executableDefault,
-			case: executableCase
+			default: makeExecDefault(value),
+			do: makeExecDo(value, result, caseId),
+			case: makePassCase(value, result, caseId)
 		};
-	}
+	};
+}
 
-	function ignoredDefault(ignoredCallback: EVA_SWITCH_DEFAULT_CALLBACK): void { }
+// ==
+// EVA SWITCH
+// ==
 
-	function ignoredCase(ignoredEvaluate: RegExp | EVA_SWITCH_CASE_EVALUATE, ignoredCaseId: any): EVA_SWITCH_CASE_RETURN {
-		return {
-			default: ignoredDefault,
-			case: ignoredCase,
-			do: ignoredDo
-		};
-	}
-
-	function ignoredDo(ignoredCallback: EVA_SWITCH_DO_CALLBACK): EVA_SWITCH_DO_RETURN {
-		return {
-			default: ignoredDefault,
-			case: ignoredCase
-		};
-	}
-
+type EvaSwitchResult = {
+	default: ExecDefault,
+	do: PassDo,
+	case: ExecCase
+};
+export default function evaSwitch(value: any): EvaSwitchResult {
 	return {
-		default: executableDefault,
-		case: executableCase
+		default: makeExecDefault(value),
+		do: makePassDo(value),
+		case: makeExecCase(value)
 	};
 }

@@ -5,25 +5,52 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Sample eva-switch</title>
-	<link rel="stylesheet" href="./style.css">
+	<style>
+		pre {
+			background-color: #efefef;
+			border: 1px solid #eeeeee;
+			border-radius: 0.25rem;
+			display: block;
+			padding: 1rem;
+		}
+	</style>
 </head>
 
 <body>
 	<main class="page-width">
 		<h1>Sample eva-switch</h1>
 
-		<p>The following content is dynamically generated which can be viewed in the web page's source code.</p>
+		<h2>Default</h2>
+		<p>Execute default.</p>
+		<div id="default"></div>
+
+		<h2>RegExp</h2>
+		<p>Execute case with regular expression type evaluate argument.</p>
+		<div id="regexp"></div>
+
+		<h2>RegExp Hollo</h2>
+		<p>Execute case with regular expression type evaluate argument.</p>
+		<div id="regexp-holo"></div>
+
+		<h2>Function Case</h2>
+		<p>Execute case with function type evaluate.</p>
+		<div id="function"></div>
+
+		<h2>Falsy Function Result</h2>
+		<p>Execute case with evaluation function that returns either undefined, false value.</p>
+		<div id="falsy-function"></div>
 	</main>
 
 	<script type="module">
 		import evaSwitch from '../dist/eva-switch.js';
-		import CodeDisplay from './code-display.js';
+		import prettierCodeAndResult from './prettier-code-and-result.js';
 
-		const codeDisplay = new CodeDisplay(document.querySelector('main'));
+		// ==
+		// DEFAULT
+		// ==
 
-		codeDisplay.insert(
-			'Default',
-			'Execute default.',
+		prettierCodeAndResult(
+			document.getElementById('default'),
 			() => {
 				let result;
 				evaSwitch('hello world')
@@ -34,9 +61,12 @@
 			}
 		);
 
-		codeDisplay.insert(
-			'RegExp',
-			'Execute case with regular expression.',
+		// ==
+		// REGEXP
+		// ==
+
+		prettierCodeAndResult(
+			document.getElementById('regexp'),
 			() => {
 				let result;
 				evaSwitch('hello world')
@@ -66,9 +96,12 @@
 			}
 		);
 
-		codeDisplay.insert(
-			'RegExp Hollo',
-			'Execute case with regular expression.',
+		// ==
+		// REGEXP HOLO
+		// ==
+
+		prettierCodeAndResult(
+			document.getElementById('regexp-holo'),
 			() => {
 				let result;
 				evaSwitch('hollo world')
@@ -98,9 +131,12 @@
 			}
 		);
 
-		codeDisplay.insert(
-			'Function',
-			'Execute case with eval function.',
+		// ==
+		// FUNCTION
+		// ==
+
+		prettierCodeAndResult(
+			document.getElementById('function'),
 			() => {
 				let result;
 				evaSwitch('hello world')
@@ -123,9 +159,12 @@
 			}
 		);
 
-		codeDisplay.insert(
-			'Falsy Function',
-			'Execute case with eval function returning falsy value.',
+		// ==
+		// FALSY FUNCTION
+		// ==
+
+		prettierCodeAndResult(
+			document.getElementById('falsy-function'),
 			() => {
 				let result;
 				evaSwitch('hello world')

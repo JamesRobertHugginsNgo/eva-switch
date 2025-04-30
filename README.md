@@ -6,18 +6,10 @@
 
 A simple function that allows conditional evaluations similar to the `switch-case` structures.
 
-## Reusable Codes
-
-Use the raw link to quickly download the raw source code.
-
-- [eva-switch.ts](./src/eva-switch.ts) \| [raw](./src/eva-switch.ts?raw=1)
-- [eva-switch.js](./dist/eva-switch.js) \| [raw](./dist/eva-switch.js?raw=1)
-
-## Samples
-
-The following sample web pages are best viewed from the github page version.
-
-- [sample.html](./sample/sample.html)
+- Boilerplate Code
+	- [TypeScript (src/eva-switch.ts)](./src/eva-switch.ts) [[Raw](./src/eva-switch.ts?raw=1)]
+	- [JavaScript (dist/eva-switch.js)](./dist/eva-switch.js) [[Raw](./dist/eva-switch.js?raw=1)]
+- [Sample Usage (sample/sample.html)](./sample/sample.html)
 
 ## License
 
