@@ -1,13 +1,21 @@
 {
   "name": "eva-switch",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "",
   "keywords": [],
-  "license": "MIT",
   "author": {
     "name": "James Robert Huggins Ngo",
     "email": "jamesroberthugginsngo@gmail.com",
     "url": "https://jamesroberthugginsngo.github.io"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/JamesRobertHugginsNgo/eva-switch#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesRobertHugginsNgo/eva-switch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JamesRobertHugginsNgo/eva-switch/issues"
   },
   "type": "module",
   "main": "./src/eva-switch.ts",
@@ -18,8 +26,8 @@
     }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && npx prettier --write ./dist/*.[jt]s"
+    "build": "tsc -project ./tsconfig.json && prettier --single-quote --write ./dist/**/*.[tj]s",
+    "watch": "tsc -project ./tsconfig.json --watch"
   },
   "devDependencies": {
     "prettier": "^3.5.1",
